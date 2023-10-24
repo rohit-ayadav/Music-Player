@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Styling for the modal */
+        #noticeModal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: #f8d7da;
+            /* Red background color, change to your preference */
+            color: #721c24;
+            /* Dark red text color, change to your preference */
+            border: 1px solid #f5c6cb;
+            /* Light red border color, change to your preference */
+            border-radius: 5px;
+            z-index: 1000;
+        }
+
+        /* Styling for the close button */
+        #closeButton {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
+
+        /* Styling for the link/button to go back to the main page */
+        #goBackLink {
+            color: #155724;
+            /* Dark green color, change to your preference */
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="noticeModal">
+        <span id="closeButton" onclick="closeNoticeModal()">&times;</span>
+        <p>This website is for educational purposes only.</p>
+        <p>Click <span id="goBackLink" onclick="goToMainPage()">here</span> to go back to the main page.</p>
+    </div>
+
+    <!-- Your main page content goes here -->
+
+    <script>
+        const hasVisitedBefore = localStorage.getItem('hasVisitedBefore');
+
+        if (!hasVisitedBefore) {
+            document.getElementById('noticeModal').style.display = 'block';
+
+            localStorage.setItem('hasVisitedBefore', true);
+        }
+
+        function closeNoticeModal() {
+            document.getElementById('noticeModal').style.display = 'none';
+        }
+
+        function goToMainPage() {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+
+</html>
