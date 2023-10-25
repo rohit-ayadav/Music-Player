@@ -67,9 +67,38 @@ nav ul li {
 }
 .icons {
   margin-top: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .icons i {
   cursor: pointer;
+  margin: 0 5px;
+  color: #f9dcdcc9;
+}
+.icons i:hover {
+  color: #fff;
+}
+#volumeSlider {
+  height: 5px;
+  border-radius: 2px;
+  outline: none;
+  /* vertical-align: middle; */
+  background-color: #e0e0e0;
+  cursor: pointer;
+}
+.icons i.fa-volume-low,
+.icons i.fa-volume-high {
+  margin: 0 10px;
+  cursor: pointer;
+}
+.icons i.fa-volume-high {
+  margin-right: 0;
+}
+.icons #masterPlay{
+  margin: 0;
+  flex: 1;
+  text-align: center;
 }
 #myProgressBar {
   width: 80vw;
@@ -137,4 +166,8 @@ nav ul li {
   height: 5px;
   border-radius: 2px;
   outline: none;
+}
+#myprogressBar:hover {
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
 }

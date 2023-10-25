@@ -1,5 +1,5 @@
 console.log("Welcome to Stopify");
-//initialise the variable
+
 let songIndex = 0;
 let audio_Element = new Audio('song//1.mp3');
 let masterPlay = document.getElementById('masterPlay');
@@ -61,7 +61,7 @@ let songs = [
         coverPath: "cover//9.jpeg",
     },
 ];
-// Define a function to update timestamps
+
 function updateTimestamps() {
     songItems.forEach((element, i) => {
         const audioElement = new Audio(songs[i].filePath);
@@ -77,7 +77,6 @@ function updateTimestamps() {
             }
         });
 
-        // Make sure to load metadata to trigger the 'loadedmetadata' event
         audioElement.load();
     });
 }
@@ -103,48 +102,28 @@ updateTimestamps();
 setupPlayButtonListeners();
 
 
-// updateAllTimestamps();
-
-function setupPlayButtonListeners() {
-    Array.from(document.getElementsByClassName("songItemPlay")).forEach((element) => {
-        element.addEventListener('click', (e) => {
-            console.log(e.target);
-            makeAllPlays();
-            songIndex = parseInt(e.target.id);
-            e.target.classList.remove('fa-play-circle');
-            e.target.classList.add('fa-pause-circle');
-            playSongAtIndex(songIndex);
-        });
-    });
-}
-
-// Call the function after updating timestamps
-// setupPlayButtonListeners();
-
 
 songItems.forEach((element, i) => {
     console.log(element, i);
     element.getElementsByTagName("img")[0].src = songs[i].coverPath;
     element.getElementsByClassName("songName")[0].innerText = songs[i].songName;
 
-    // let audioElement = new Audio(songs[i].filePath);
+    let audioElement = new Audio(songs[i].filePath);
 
-    // const playButtonIcon = document.createElement('i');
-    // playButtonIcon.classList.add('fas', 'fa-1.5x', 'fa-play-circle');
 
-    // audioElement.addEventListener('loadedmetadata', () => {
+    audioElement.addEventListener('loadedmetadata', () => {
 
-    //     const minutes = Math.floor(audioElement.duration / 60);
-    //     const seconds = Math.floor(audioElement.duration % 60);
+        const minutes = Math.floor(audioElement.duration / 60);
+        const seconds = Math.floor(audioElement.duration % 60);
 
-    //     const formattedDuration = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+        const formattedDuration = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
 
-    //     const timestampElement = element.getElementsByClassName("timeStamp")[0];
-    //     if (timestampElement) {
-    //         timestampElement.innerHTML = `${formattedDuration} <i id="${i}" class="far songItemPlay fas fa-1.5x fa-play-circle"></i>`;
-    //     }
+        const timestampElement = element.getElementsByClassName("timeStamp")[0];
+        if (timestampElement) {
+            timestampElement.innerHTML = `${formattedDuration} <i id="${i}" class="far songItemPlay fas fa-1.5x fa-play-circle"></i>`;
+        }
 
-    // });
+    });
 });
 
 // });
@@ -162,16 +141,9 @@ masterPlay.addEventListener('click', () => {
     }
 });
 
-// You can call pauseSong() whenever you want to pause the audio from other parts of your code
-// Example:
-// pauseSong();
 
-//Listen to events
 audio_Element.addEventListener('timeupdate', () => {
-    // console.log('timeupdate');
-    //Update seekbar
     progress = parseFloat((audio_Element.currentTime / audio_Element.duration) * 100)
-    // console.log(progress);
     myProgressBar.value = progress;
     updateProgressBarColor(progress);
 })
@@ -226,27 +198,47 @@ document.getElementById('next').addEventListener('click', () => {
 document.getElementById('previous').addEventListener('click', () => {
     playPreviousSong();
 });
+document.getElementById('backward').addEventListener('click', seekBack);
+document.getElementById('forward').addEventListener('click', seekForward);
 
-function playNextSong() {
-    songIndex = (songIndex + 1) % songs.length;
-    playSongAtIndex(songIndex);
-}
+// function playNextSong() {
+//     songIndex = (songIndex + 1) % songs.length;
+//     playSongAtIndex(songIndex);
+// }
 
-function playPreviousSong() {
-    songIndex = (songIndex - 1 + songs.length) % songs.length;
-    playSongAtIndex(songIndex);
-}
+// function playPreviousSong() {
+//     if (shuffleMode)
+//         songIndex = Math.floor(Math.random() * songs.length);
+//     else
+//         songIndex = (songIndex - 1 + songs.length) % songs.length;
+//     playSongAtIndex(songIndex);
+// }
 function pauseSong() {
     audio_Element.pause();
     masterPlay.classList.remove('fa-pause-circle');
     masterPlay.classList.add('fa-play-circle');
     gif.style.opacity = 0;
 }
+function seekBack() {
+    if (audio_Element.readyState > 0) {
+        let newTime = audio_Element.currentTime - 10;
+        if (newTime < 0)
+            newTime = 0;
+        audio_Element.currentTime = newTime;
+    }
 
+}
+function seekForward() {
+    if (audio_Element.readyState > 0) {
+        let newTime = audio_Element.currentTime + 10;
+        audio_Element.currentTime = newTime;
+    }
+
+}
 function playSongAtIndex(index) {
     audio_Element.src = `song//${index}.mp3`;
     console.log('Play song at index:', index);
-    masterSongName.innerText = `${songs[index].songName}`;
+    masterSongName.innerHTML = ` <i class="fas fa-music"></i> ${songs[index].songName}`;
     audio_Element.currentTime = 0;
     audio_Element.play();
     gif.style.opacity = 1;
@@ -265,7 +257,7 @@ audio_Element.addEventListener('error', function () {
 audio_Element.addEventListener('timeupdate', () => {
     const currentTime = formatTime(audio_Element.currentTime);
     const totalDuration = formatTime(audio_Element.duration);
-   
+
 
     currentTimeElement.innerText = currentTime;
     totalDurationElement.innerText = totalDuration;
@@ -285,3 +277,47 @@ const volumeSlider = document.getElementById('volumeSlider');
 volumeSlider.addEventListener('input', () => {
     audio_Element.volume = volumeSlider.value / 100;
 });
+
+let shuffleMode = false;
+document.getElementById('shuffle').addEventListener('click', shuffleSong);
+
+function shuffleSong() {
+    shuffleMode = !shuffleMode;
+    if (shuffleMode) {
+        // shuffle.style.backgroundColor = '#4caf50';
+        shuffle.style.color = '#fff';
+    } else {
+        shuffle.style.backgroundColor = 'transparent';
+        shuffle.style.color = '#f9dcdcc9';
+    }
+}
+
+let repeatMode = false;
+document.getElementById('repeat').addEventListener('click', repeatSong);
+
+function repeatSong() {
+    repeatMode = !repeatMode;
+    if (repeatMode) {
+        // shuffle.style.backgroundColor = '#4caf50';
+        repeat.style.color = '#fff';
+    } else {
+        repeat.style.backgroundColor = 'transparent';
+        repeat.style.color = '#f9dcdcc9';
+    }
+}
+
+function playNextSong() {
+    if (shuffleMode)
+        songIndex = Math.floor(Math.random() * songs.length);
+    else
+        songIndex = (songIndex + 1) % songs.length;
+    playSongAtIndex(songIndex);
+}
+
+function playPreviousSong() {
+    if (shuffleMode)
+        songIndex = Math.floor(Math.random() * songs.length);
+    else
+        songIndex = (songIndex - 1 + songs.length) % songs.length;
+    playSongAtIndex(songIndex);
+}
