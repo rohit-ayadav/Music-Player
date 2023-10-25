@@ -265,8 +265,7 @@ audio_Element.addEventListener('error', function () {
 audio_Element.addEventListener('timeupdate', () => {
     const currentTime = formatTime(audio_Element.currentTime);
     const totalDuration = formatTime(audio_Element.duration);
-    // console.log("Current Time:", currentTime);
-    // console.log("Total Duration:", totalDuration);
+   
 
     currentTimeElement.innerText = currentTime;
     totalDurationElement.innerText = totalDuration;
@@ -285,20 +284,4 @@ function formatTime(seconds) {
 const volumeSlider = document.getElementById('volumeSlider');
 volumeSlider.addEventListener('input', () => {
     audio_Element.volume = volumeSlider.value / 100;
-})
-
-const hasVisitedBefore = localStorage.getItem('hasVisitedBefore');
-
-if (!hasVisitedBefore) {
-    document.getElementById('noticeModal').style.display = 'block';
-
-    localStorage.setItem('hasVisitedBefore', true);
-}
-
-function closeNoticeModal() {
-    document.getElementById('noticeModal').style.display = 'none';
-}
-
-function goToMainPage() {
-    window.location.href = 'index.html';
-}
+});
