@@ -11,12 +11,12 @@ let currentTimeElement = document.getElementById('currentTime');
 let totalDurationElement = document.getElementById('totalDuration');
 let songs = [
     {
-        songName: "बड़े अच्छे लगते हैं",
+        songName: "Wo Chaandani Wo Raatein jawaan",
         filePath: "song//0.mp3",
         coverPath: "cover/0.jpeg",
     },
     {
-        songName: "Jeene Laga Hoon",
+        songName: "बड़े अच्छे लगते हैं",
         filePath: "song//1.mp3",
         coverPath: "cover//1.jpeg",
     },
@@ -31,27 +31,27 @@ let songs = [
         coverPath: "cover//3.jpeg",
     },
     {
-        songName: "Pee Loon",
+        songName: "छू कर मेरे मन को किया तूने क्या इशारा",
         filePath: "song//4.mp3",
         coverPath: "cover//4.jpeg",
     },
     {
-        songName: "Tum Mile",
+        songName: "Mere paas tum Rahat fateh ali khan",
         filePath: "song//5.mp3",
         coverPath: "cover//5.jpeg",
     },
     {
-        songName: "Raabta",
+        songName: "एक लड़की को देखा तो ऐसा लगा",
         filePath: "song//6.mp3",
         coverPath: "cover//6.jpeg",
     },
     {
-        songName: "Tum Hi Aana",
+        songName: "Jalte Diye",
         filePath: "song//7.mp3",
         coverPath: "cover//7.jpeg",
     },
     {
-        songName: "Tum Mile Dil Khile",
+        songName: "जिस दिन तेरी मेरी बात नहीं होती",
         filePath: "song//8.mp3",
         coverPath: "cover//8.jpeg",
     },
@@ -64,11 +64,11 @@ let songs = [
 
 function updateTimestamps() {
     songItems.forEach((element, i) => {
-        const audioElement = new Audio(songs[i].filePath);
+        const audio_Element = new Audio(songs[i].filePath);
 
-        audioElement.addEventListener('loadedmetadata', () => {
-            const minutes = Math.floor(audioElement.duration / 60);
-            const seconds = Math.floor(audioElement.duration % 60);
+        audio_Element.addEventListener('loadedmetadata', () => {
+            const minutes = Math.floor(audio_Element.duration / 60);
+            const seconds = Math.floor(audio_Element.duration % 60);
             const formattedDuration = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
 
             const timestampElement = element.getElementsByClassName("timeStamp")[0];
@@ -77,7 +77,7 @@ function updateTimestamps() {
             }
         });
 
-        audioElement.load();
+        audio_Element.load();
     });
 }
 
@@ -108,13 +108,13 @@ songItems.forEach((element, i) => {
     element.getElementsByTagName("img")[0].src = songs[i].coverPath;
     element.getElementsByClassName("songName")[0].innerText = songs[i].songName;
 
-    let audioElement = new Audio(songs[i].filePath);
+    let audio_Element = new Audio(songs[i].filePath);
 
 
-    audioElement.addEventListener('loadedmetadata', () => {
+    audio_Element.addEventListener('loadedmetadata', () => {
 
-        const minutes = Math.floor(audioElement.duration / 60);
-        const seconds = Math.floor(audioElement.duration % 60);
+        const minutes = Math.floor(audio_Element.duration / 60);
+        const seconds = Math.floor(audio_Element.duration % 60);
 
         const formattedDuration = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
 
@@ -246,7 +246,12 @@ function playSongAtIndex(index) {
     masterPlay.classList.add('fa-pause-circle');
 }
 
-audio_Element.addEventListener('ended', playNextSong);
+audio_Element.addEventListener('ended', () => {
+    if (shuffleMode)
+        playSongAtIndex(songIndex);
+    else
+        playNextSong();
+});
 
 audio_Element.addEventListener('error', function () {
     console.error('Error loading ' + songs[songIndex].songName + ':', event);
@@ -273,10 +278,7 @@ function formatTime(seconds) {
     return formattedMinutes + ':' + formattedSeconds;
 }
 
-const volumeSlider = document.getElementById('volumeSlider');
-volumeSlider.addEventListener('input', () => {
-    audio_Element.volume = volumeSlider.value / 100;
-});
+
 
 let shuffleMode = false;
 document.getElementById('shuffle').addEventListener('click', shuffleSong);
@@ -292,13 +294,32 @@ function shuffleSong() {
     }
 }
 
+audio_Element.volume = 0.6;
+updateVolumeSlider();
+document.getElementById('volumeDown').addEventListener('click', () => {
+    updateVolumeSlider();
+    audio_Element.volume = Math.max(audio_Element.volume - 0.1, 0);
+    updateVolumeSlider();
+})
+document.getElementById('volumeUp').addEventListener('click', () => {
+    audio_Element.volume = Math.min(audio_Element.volume + 0.1, 1);
+    updateVolumeSlider();
+})
+const volumeSlider = document.getElementById('volumeSlider');
+volumeSlider.addEventListener('input', () => {
+    audio_Element.volume = volumeSlider.value / 100;
+    updateVolumeSlider();
+});
+function updateVolumeSlider() {
+    const volumeSlider = document.getElementById('volumeSlider');
+    volumeSlider.value = audio_Element.volume * 100;
+}
 let repeatMode = false;
 document.getElementById('repeat').addEventListener('click', repeatSong);
 
 function repeatSong() {
     repeatMode = !repeatMode;
     if (repeatMode) {
-        // shuffle.style.backgroundColor = '#4caf51';
         repeat.style.color = '#fff';
     } else {
         repeat.style.backgroundColor = 'transparent';
@@ -309,6 +330,8 @@ function repeatSong() {
 function playNextSong() {
     if (shuffleMode)
         songIndex = Math.floor(Math.random() * songs.length);
+    else if (repeatMode)
+        songIndex = songIndex;
     else
         songIndex = (songIndex + 1) % songs.length;
     playSongAtIndex(songIndex);
@@ -317,7 +340,25 @@ function playNextSong() {
 function playPreviousSong() {
     if (shuffleMode)
         songIndex = Math.floor(Math.random() * songs.length);
+    else if (repeatMode)
+        songIndex = songIndex;
     else
         songIndex = (songIndex - 1 + songs.length) % songs.length;
     playSongAtIndex(songIndex);
+}
+
+let darkMode = false;
+document.getElementById('theme').addEventListener('click', () => {
+    // document.body.classList.toggle("dark-mode");
+    // document.body.classList.toggle("songItem");
+    darkMode = !darkMode; toggleDark();
+});
+function toggleDark() {
+    if (darkMode) {
+        theme.style.color = 'red'; 
+        document.body.classList.add("dark-mode");
+    } else {
+        theme.style.color = ''; 
+        document.body.classList.remove("dark-mode");
+    }
 }

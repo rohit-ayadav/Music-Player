@@ -3,10 +3,16 @@
 
 body {
   background-color: antiquewhite;
+  transition: background-color 0.5s, color 0.5s;
 }
 * {
   margin: 0;
   padding: 0;
+}
+body.dark-mode,
+.songItem {
+  color: white;
+  background-color: black;
 }
 nav {
   font-family: "Ubuntu", sans-serif;
@@ -21,6 +27,11 @@ nav ul {
 }
 nav ul li {
   padding: 0px 12px;
+  cursor: pointer;
+}
+nav ul li:hover {
+  color: rgb(255, 5, 5);
+  box-shadow: 0 5px 15px rgba(145, 92, 182, 0.4);
 }
 .brand {
   display: flex;
@@ -95,7 +106,7 @@ nav ul li {
 .icons i.fa-volume-high {
   margin-right: 0;
 }
-.icons #masterPlay{
+.icons #masterPlay {
   margin: 0;
   flex: 1;
   text-align: center;
