@@ -298,7 +298,7 @@ document.getElementById('repeat').addEventListener('click', repeatSong);
 function repeatSong() {
     repeatMode = !repeatMode;
     if (repeatMode) {
-        // shuffle.style.backgroundColor = '#4caf50';
+        // shuffle.style.backgroundColor = '#4caf51';
         repeat.style.color = '#fff';
     } else {
         repeat.style.backgroundColor = 'transparent';
