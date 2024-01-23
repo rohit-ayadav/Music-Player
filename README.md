@@ -37,6 +37,10 @@ Immerse yourself in a musical journey with our HTML, CSS, and JS-powered music p
 - Use the control icons at the bottom to manage playback, volume, and modes.
 - Explore the features and enjoy the music!
 
+## Live Website
+
+Check out the live version of the Music Player on [GitHub Pages](https://rohit-ayadav.github.io/Music-Player/).
+
 ## Contributing
 
 Contributions are welcome! If you have ideas for improvements or new features, feel free to open an issue or submit a pull request.
